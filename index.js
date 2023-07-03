@@ -134,7 +134,7 @@ app.put("/post", uploadMiddleware.single("files"), async (req, res) => {
   const token = req.cookies.token;
   // res.json(req.cookies.token)
   if (token) {
-    // console.log({token_put:token})
+    console.log({token_put:token})
     jwt.verify(token, "secret", async (err, info) => {
       if (err) throw err;
       const { id, title, summary, content } = req.body;
