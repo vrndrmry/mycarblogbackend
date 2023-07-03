@@ -182,9 +182,9 @@ app.get("/post/:id", async (req, res) => {
 });
 
 app.delete("/post/:id", (req, res) => {
-  // const id = req.body._id
-  const token = req.cookies.token;
-  if (token) {
+  const id = req.body._id
+  // const token = req.cookies.token;
+  // if (token) {
     jwt.verify(token, "secret", async (err, info) => {
       if (err) throw err;
       const { id } = req.params;
@@ -192,7 +192,7 @@ app.delete("/post/:id", (req, res) => {
       const postDoc = await Post.deleteOne({ _id: id });
       res.status(200).json("Deleted");
     });
-  }
+  // }
 });
 
 app.listen(4000, () => {
