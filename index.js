@@ -14,7 +14,7 @@ const PostModel = require("./models/Post");
 
 connectMongoose();
 
-app.use(cors({ credentials: true, origin: "https://mycarblogfrontend02072023.onrender.com" }));
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended:true}))
@@ -76,6 +76,7 @@ app.get("/profile", (req, res) => {
   if (token){
     jwt.verify(token, "secret", (err, info) => {
       if (err) throw err;
+      console.log(token)
       res.json(info);
     });
   } else {
@@ -94,9 +95,11 @@ app.post("/post", uploadMiddleware.single("files"), async (req, res) => {
   const newFilename = path + "." + ext;
   fs.renameSync(path, newFilename);
 
-  const token = req.cookies.token;
+  const token = await req.cookies.token;
+  
   if (token){
     jwt.verify(token, "secret", async (err, info) => {
+      // console.log({token_post:token})
       if (err) throw err;
       const { title, summary, content } = req.body;
       try{
@@ -127,10 +130,11 @@ app.put("/post", uploadMiddleware.single("files"), async (req, res) => {
     newFilename = path + "." + ext;
     fs.renameSync(path, newFilename);
   }
-
+  
   const token = req.cookies.token;
+  // res.json(req.cookies.token)
   if (token) {
-    // console.log(token)
+    // console.log({token_put:token})
     jwt.verify(token, "secret", async (err, info) => {
       if (err) throw err;
       const { id, title, summary, content } = req.body;
@@ -154,8 +158,7 @@ app.put("/post", uploadMiddleware.single("files"), async (req, res) => {
         res.json({ message: err });
       }
     });
-  }
-  if (!token) {
+  }else{
     res.json({ message: "token not verified at 155" });
   }
 });
