@@ -17,7 +17,7 @@ connectMongoose();
 app.use(cors({ credentials: true, origin: "https://mycarblogfrontend02072023.onrender.com" }));
 app.use(express.json());
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
 app.post("/register", async (req, res) => {
@@ -73,14 +73,14 @@ app.post("/login", async (req, res) => {
 
 app.get("/profile", (req, res) => {
   const token = req.cookies.token;
-  if (token){
+  if (token) {
     jwt.verify(token, "secret", (err, info) => {
       if (err) throw err;
-      console.log(token)
+      console.log(token);
       res.json(info);
     });
   } else {
-    res.json({message:"Invalid token at 81"})
+    res.json({ message: "Invalid token at 81" });
   }
 });
 
@@ -95,14 +95,13 @@ app.post("/post", uploadMiddleware.single("files"), async (req, res) => {
   const newFilename = path + "." + ext;
   fs.renameSync(path, newFilename);
 
-  const token = await req.cookies.token;
-  
-  if (token){
+  const token = req.cookies.token;
+
     jwt.verify(token, "secret", async (err, info) => {
       // console.log({token_post:token})
       if (err) throw err;
       const { title, summary, content } = req.body;
-      try{
+      try {
         const postDoc = await Post.create({
           title,
           summary,
@@ -111,13 +110,10 @@ app.post("/post", uploadMiddleware.single("files"), async (req, res) => {
           author: info.id,
         });
         res.json(postDoc);
-      } catch(err){
+      } catch (err) {
         res.json({ message: err });
       }
     });
-  } else {
-    return res.json({message:"Invalid token at 112"})
-  }
 });
 
 app.put("/post", uploadMiddleware.single("files"), async (req, res) => {
@@ -130,37 +126,32 @@ app.put("/post", uploadMiddleware.single("files"), async (req, res) => {
     newFilename = path + "." + ext;
     fs.renameSync(path, newFilename);
   }
-  
+
   const token = req.cookies.token;
   // res.json(req.cookies.token)
-  if (token) {
-    console.log({token_put:token})
-    jwt.verify(token, "secret", async (err, info) => {
-      if (err) throw err;
-      const { id, title, summary, content } = req.body;
-      const postDoc = await Post.findById(id);
-      const isAuthor =
-        JSON.stringify(postDoc.author) === JSON.stringify(info.id);
-      //   res.json({ isAuthor, postDoc, info });
-      if (!isAuthor) {
-        return res.status(400).json("You are not the actual author");
-      }
 
-      try {
-        await postDoc.updateOne({
-          title,
-          summary,
-          content,
-          cover: newFilename ? newFilename : postDoc.cover,
-        });
-        res.json(postDoc);
-      } catch (err) {
-        res.json({ message: err });
-      }
-    });
-  }else{
-    res.json({ message: "token not verified at 155" });
-  }
+  jwt.verify(token, "secret", async (err, info) => {
+    if (err) throw err;
+    const { id, title, summary, content } = req.body;
+    const postDoc = await Post.findById(id);
+    const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
+    //   res.json({ isAuthor, postDoc, info });
+    if (!isAuthor) {
+      return res.status(400).json("You are not the actual author");
+    }
+
+    try {
+      await postDoc.updateOne({
+        title,
+        summary,
+        content,
+        cover: newFilename ? newFilename : postDoc.cover,
+      });
+      res.json(postDoc);
+    } catch (err) {
+      res.json({ message: err });
+    }
+  });
 });
 
 app.get("/post", async (req, res) => {
