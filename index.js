@@ -65,6 +65,7 @@ app.post("/login", async (req, res) => {
           id: userDoc._id,
           name: userDoc.name,
           username: userDoc.username,
+          domain: "https://mycarblogfrontend02072023.onrender.com",
         });
       }
     });
