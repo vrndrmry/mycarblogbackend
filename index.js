@@ -62,12 +62,12 @@ app.post("/login", async (req, res) => {
         return res.status(400).json(err);
       } else {
         return res.cookie("token", token)
-        // .json({
-        //   id: userDoc._id,
-        //   name: userDoc.name,
-        //   username: userDoc.username,
-        //   domain: "https://mycarblogfrontend02072023.onrender.com",
-        // });
+        .json({
+          id: userDoc._id,
+          name: userDoc.name,
+          username: userDoc.username,
+          domain: "https://mycarblogfrontend02072023.onrender.com",
+        });
       }
     });
   }
