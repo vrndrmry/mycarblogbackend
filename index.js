@@ -61,12 +61,13 @@ app.post("/login", async (req, res) => {
       if (err) {
         return res.status(400).json(err);
       } else {
-        return res.cookie("token", token).json({
-          id: userDoc._id,
-          name: userDoc.name,
-          username: userDoc.username,
-          domain: "https://mycarblogfrontend02072023.onrender.com",
-        });
+        return res.cookie("token", token)
+        // .json({
+        //   id: userDoc._id,
+        //   name: userDoc.name,
+        //   username: userDoc.username,
+        //   domain: "https://mycarblogfrontend02072023.onrender.com",
+        // });
       }
     });
   }
@@ -185,6 +186,7 @@ app.get("/post/:id", async (req, res) => {
 app.delete("/post/:id", (req, res) => {
   // const id = req.body._id
   const token = req.cookies.token;
+  console.log(token)
   if (token) {
     jwt.verify(token, "secret", async (err, info) => {
       if (err) throw err;
