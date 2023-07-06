@@ -14,7 +14,7 @@ const PostModel = require("./models/Post");
 
 connectMongoose();
 
-app.use(cors({ credentials: true, origin: "https://mycarblogfrontend02072023.onrender.com"}));
+app.use(cors({ credentials: true, origin: "*"}));
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended:true}))
@@ -66,7 +66,6 @@ app.post("/login", async (req, res) => {
           id: userDoc._id,
           name: userDoc.name,
           username: userDoc.username,
-          domain: "https://mycarblogbackend02072023.onrender.com",
         });
       }
     });
@@ -185,8 +184,9 @@ app.get("/post/:id", async (req, res) => {
 });
 
 app.delete("/post/:id", (req, res) => {
-  // const id = req.body._id
-  const token = req.headers.cookie.split('=')[1];
+  const id = req.body._id
+  // const token = req.headers.cookie.split('=')[1];
+  const token = req.cookies.token
   console.log(token)
   if (token) {
     jwt.verify(token, "secret", async (err, info) => {
