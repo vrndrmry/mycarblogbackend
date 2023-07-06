@@ -185,8 +185,8 @@ app.get("/post/:id", async (req, res) => {
 
 app.delete("/post/:id", (req, res) => {
   const id = req.body._id
-  // const token = req.headers.cookie.split('=')[1];
-  const token = req.cookies.token
+  const token = req.headers.cookie.split('=')[1];
+  // const token = req.cookies.token
   console.log(token)
   if (token) {
     jwt.verify(token, "secret", async (err, info) => {
