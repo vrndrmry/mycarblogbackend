@@ -75,6 +75,7 @@ app.post("/login", async (req, res) => {
 
 app.get("/profile", (req, res) => {
   const token = req.cookies.token;
+  
   if (token){
     jwt.verify(token, "secret", (err, info) => {
       if (err) throw err;
@@ -185,7 +186,7 @@ app.get("/post/:id", async (req, res) => {
 
 app.delete("/post/:id", (req, res) => {
   // const id = req.body._id
-  const token = req.cookies.token;
+  const token = req.headers.cookie.split('=')[1];
   console.log(token)
   if (token) {
     jwt.verify(token, "secret", async (err, info) => {
