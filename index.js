@@ -14,7 +14,7 @@ const PostModel = require("./models/Post");
 
 connectMongoose();
 
-app.use(cors({ credentials: true, origin: "https://mycarblogfrontend02072023.onrender.com"}));
+app.use(cors({ credentials: true, origin: "*"}));
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended:true}))
