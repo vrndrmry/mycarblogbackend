@@ -18,7 +18,7 @@ app.use(cors({origin: "*"}));
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended:true}))
-app.use("/uploads", express.static(__dirname + "/uploads"));
+
 
 app.post("/register", async (req, res) => {
   const { name, username, password } = req.body;
@@ -71,7 +71,7 @@ app.post("/login", async (req, res) => {
     });
   }
 });
-
+app.use("/uploads", express.static(__dirname + "/uploads"));
 app.get("/profile", (req, res) => {
   const token = req.cookies.token;
   
